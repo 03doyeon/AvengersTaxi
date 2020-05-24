@@ -7,10 +7,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.os.Handler;
 import android.os.Message;
+=======
+>>>>>>> c78c61307c65a0ce62e4acf57d608fc702909086
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.avengers.project.avengerstaxi.location.MapEventListener;
 import com.avengers.project.avengerstaxi.models.AddressModel;
@@ -21,20 +23,36 @@ import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+<<<<<<< HEAD
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+=======
+import com.avengers.project.avengerstaxi.location.MapEventListener;
+import com.avengers.project.avengerstaxi.location.MapLocationListener;
+>>>>>>> c78c61307c65a0ce62e4acf57d608fc702909086
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_LOCATION = 10001;
     private LocationManager locationManager;
+<<<<<<< HEAD
    // private MapLocationListener locationListener;
     private MapEventListener mapEventListener;
 
     public MainActivity() {
         //this.locationListener = new MapLocationListener(); //생성자
         this.mapEventListener=new MapEventListener(makeHandler());
+=======
+    private MapLocationListener locationListener;
+    private MapEventListener mapEventListener;
+
+
+    public MainActivity() {
+        //this.locationListener = new MapLocationListener(); //생성자
+        this.mapEventListener = new MapEventListener();
+>>>>>>> c78c61307c65a0ce62e4acf57d608fc702909086
     }
+
 
 
     @Override
@@ -42,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c78c61307c65a0ce62e4acf57d608fc702909086
         // 안드로이드에서 권한 확인이 의무화 되어서 작성된 코드! 개념만 이해
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -53,12 +74,21 @@ public class MainActivity extends AppCompatActivity {
         }
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.01f, this.locationListener);
+<<<<<<< HEAD
 
 
         MapView mapView = new MapView(this); //세터(?)
         //this.locationListener.setMapView(mapView);//지도 전달
 
         Location loc = this.locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+=======
+        //this.locationListener.setMapView(mapView);//지도 전달
+
+        MapView mapView = new MapView(this); //세터(?)
+
+        Location loc = this.locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+>>>>>>> c78c61307c65a0ce62e4acf57d608fc702909086
         mapView.setMapViewEventListener(this.mapEventListener);
 
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
