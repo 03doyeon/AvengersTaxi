@@ -2,12 +2,24 @@ package com.avengers.project.avengerstaxi.location;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
+
+import com.avengers.project.avengerstaxi.AddressRequester;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+
 public class MapEventListener implements MapView.MapViewEventListener {
+
+    //handler 필요!
+    private Handler handler;
+
+
+    public MapEventListener(Handler handler) {
+        this.handler = handler;
+    }
 
     @Override
     public void onMapViewInitialized(MapView mapView) {
@@ -61,6 +73,10 @@ public class MapEventListener implements MapView.MapViewEventListener {
 
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
+        Double latitude = mapPoint.getMapPointGeoCoord().latitude;
+        Double longitude = mapPoint.getMapPointGeoCoord().longitude;
 
+        Thread request = new Thread(new AddressRequester(latitude,longitude,this.handler));
+        request.start();
     }
 }
