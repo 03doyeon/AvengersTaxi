@@ -1,5 +1,4 @@
 package com.avengers.project.avengerstaxi.models;
-
 import com.google.api.client.util.Key;
 
 import java.util.ArrayList;

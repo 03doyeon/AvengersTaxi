@@ -1,8 +1,5 @@
 package com.avengers.project.avengerstaxi;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -15,15 +12,18 @@ import android.os.Message;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.avengers.project.avengerstaxi.location.MapEventListener;
+import com.avengers.project.avengerstaxi.models.AddressModel;
+import com.avengers.project.avengerstaxi.models.DisplayItem;
+import com.avengers.project.avengerstaxi.models.Documents;
+
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
-import com.avengers.project.avengerstaxi.location.MapEventListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.avengers.project.avengerstaxi.location.MapLocationListener;
-import com.avengers.project.avengerstaxi.models.AddressModel;
-import com.avengers.project.avengerstaxi.models.DisplayItem;
-import com.avengers.project.avengerstaxi.models.Documents;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -31,13 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_LOCATION = 10001;
     private LocationManager locationManager;
-    private MapLocationListener locationListener;
+   // private MapLocationListener locationListener;
     private MapEventListener mapEventListener;
-
 
     public MainActivity() {
         //this.locationListener = new MapLocationListener(); //생성자
-        this.mapEventListener = new MapEventListener(makeHandler());
+        this.mapEventListener=new MapEventListener(makeHandler());
     }
 
 
@@ -47,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         // 안드로이드에서 권한 확인이 의무화 되어서 작성된 코드! 개념만 이해
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -59,11 +56,13 @@ public class MainActivity extends AppCompatActivity {
         }
         this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.01f, this.locationListener);
-        //this.locationListener.setMapView(mapView);//지도 전달
+
 
         MapView mapView = new MapView(this); //세터(?)
+        //this.locationListener.setMapView(mapView);//지도 전달
 
         Location loc = this.locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        //this.locationListener.setMapView(mapView);//지도 전달
 
         mapView.setMapViewEventListener(this.mapEventListener);
 
@@ -81,39 +80,44 @@ public class MainActivity extends AppCompatActivity {
 
             mapView.addPOIItem(marker);
         }
-    }
-
-    private Handler makeHandler() {
+    }private Handler makeHandler() {
         return new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-//                AddressModel addressModel = (AddressModel) msg.obj;
-                TextView addressName = (TextView) findViewById(R.id.address);
-                TextView latitude = (TextView) findViewById(R.id.latitude);
-                TextView longitude = (TextView) findViewById(R.id.longitude);
-                DisplayItem displayItem = (DisplayItem) msg.obj;
-                AddressModel addressModel = displayItem.addressModel;
+
+                TextView address=(TextView)findViewById(R.id.address);
+                TextView latitude=(TextView) findViewById(R.id.latitude);
+                TextView longitude=(TextView) findViewById(R.id.longitude);
+                //AddressModel addressModel(AddressModel)msg.obj;
+                //위도 경도 출력
+                DisplayItem displayItem = (DisplayItem)msg.obj;
+                AddressModel addressModel=displayItem.addressModel;
 
                 latitude.setText(displayItem.latitude.toString());
                 longitude.setText(displayItem.longitude.toString());
 
+                //방어할수 있는 코드
                 if(addressModel.documents.size() > 0){ // 위치 추척(?) 안 될 시 방어 코드(조건문)
                     Documents documents = addressModel.documents.get(0);
                     if(documents.roadaddress !=null && documents.roadaddress.addressName != null) { //도로명주소가 존재하지 않을 때
-                        addressName.setText(documents.roadaddress.addressName);
+                        address.setText(documents.roadaddress.addressName);
                         if(documents.roadaddress.buildingName != null && documents.roadaddress.buildingName.length() > 0){ //건물명이 존재하지 않을 때
-                            addressName.setText(documents.roadaddress.buildingName);
+                            address.setText(documents.roadaddress.buildingName);
                         }
                     }
                     else{
-                        addressName.setText(documents.address.addressName);
+                        address.setText(documents.address.addressName);
                     }
+
+                    address.setText(addressModel.documents.get(0).roadAddress.buildingName);
+                    address.setText(addressModel.documents.get(0).roadAddress.addressName);
                 }
 
             }
         };
     }
+
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

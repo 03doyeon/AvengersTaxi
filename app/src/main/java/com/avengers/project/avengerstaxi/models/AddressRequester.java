@@ -1,11 +1,9 @@
-package com.avengers.project.avengerstaxi;
+package com.avengers.project.avengerstaxi.models;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.avengers.project.avengerstaxi.models.AddressModel;
-import com.avengers.project.avengerstaxi.models.DisplayItem;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
@@ -20,7 +18,7 @@ public class AddressRequester implements Runnable {
     private Double lat;
     private Double lng;
 
-    public AddressRequester(Double lat, Double lng, Handler handler) {
+    public AddressRequester(double lat, double lng, Handler handler) {
         this.lat = lat;
         this.lng = lng;
         this.handler = handler;
@@ -39,16 +37,18 @@ public class AddressRequester implements Runnable {
             String urlString = String.format("https://dapi.kakao.com/v2/local/geo/coord2address.json?x=%s&y=%s", this.lng.toString(), this.lat.toString());
             GenericUrl url = new GenericUrl(urlString);
             HttpHeaders headers = new HttpHeaders();
-            headers.setAuthorization("KakaoAK b313121b7c7901f56df87e42cb9f6524");
+            headers.setAuthorization("KakaoAK a0b9c1b2f417d6b1a9ca623d2393b2ad");//KakaoAK REST_API_KEY
             HttpRequest request = requestFactory.buildGetRequest(url).setHeaders(headers);
-            AddressModel addressModel = request.execute().parseAs(AddressModel.class);//요청 실행 후 이 형태로 바꿔줘!
-            DisplayItem displayItem = new DisplayItem();
-            displayItem.addressModel = addressModel;
-            displayItem.latitude = this.lat;
-            displayItem.longitude = this.lng;
-            Message message = this.handler.obtainMessage(); // 너한테 필요한 메세지 생성해줘
-            message.obj = displayItem;//객체 전달(obj = 객체) - obj는 메인과의 연결고리
-            this.handler.sendMessage(message);//메인 액티비티의 핸들러 부분 작동 (전달)
+
+            AddressModel addressModel = request.execute().parseAs(AddressModel.class);
+
+            DisplayItem displayItem=new DisplayItem();
+            displayItem.addressModel=addressModel;
+            displayItem.latitude=this.lat;
+            displayItem.longitude=this.lng;
+            Message message = this.handler.obtainMessage();
+            message.obj = displayItem;
+            this.handler.sendMessage(message);
         } catch (Exception ex) {
             Log.e("HTTP_REQUEST", ex.toString());
         }

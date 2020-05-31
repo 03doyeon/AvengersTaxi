@@ -1,24 +1,22 @@
 package com.avengers.project.avengerstaxi.location;
 
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Handler;
 
-import com.avengers.project.avengerstaxi.AddressRequester;
+import com.avengers.project.avengerstaxi.models.AddressRequester;
+import android.location.Location;
+import android.location.LocationManager;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
 
+
 public class MapEventListener implements MapView.MapViewEventListener {
-
-    //handler 필요!
+    //handler가 필요
     private Handler handler;
+    public MapEventListener(Handler handler){ this.handler=handler;
 
-
-    public MapEventListener(Handler handler) {
-        this.handler = handler;
     }
 
     @Override
@@ -28,6 +26,10 @@ public class MapEventListener implements MapView.MapViewEventListener {
 
     @Override
     public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
+
+
+        //1번 마커를 지우거나 옮기는 작업
+        //2번 마커의 위치를 변경함(지도는 제공)
         // 마커를 지우거나 옮기는 작업
         //마커의 위치 변경만(지도는 제공함)
         mapView.removeAllPOIItems();
